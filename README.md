@@ -50,4 +50,11 @@ use Fundraiser.startPool with these arguments:
 example: Fundraiser.startPool(3636) starts the uniswapv2 pool with an inverse price of 3636 tokens per ETH or lower.
 
 Noone can send ETH anymore to the contract.
+The token now becomes swappable.
 
+### To get your vested tokens
+
+Fundraiser.vester.getFunds(amount) will give you the requested amount, if it doesn't exceed the max amount you can request at that point in time. 
+example: Fundraiser.vester.getFunds(1e18) will give you 1 token, if it has 18 decimals
+
+It doesn't automatically give you all it can as to encourage devs in taking only the necessary amount, leaving any surplus in the vester until required. If a dev wants to dump, he either has to constantly take any funds he can from the vester, or has to do a massive fund retrieval before dumping, which may attract other people's attention, which would hopefully alert the community.
