@@ -47,6 +47,10 @@ contract PresalableERC20 is ERC20 {
         require(msg.sender == presaleController);
         transfersActive = true;
     }
+
+    function burn(uint amount) external {
+        _burn(msg.sender, amount);
+    }
 }
 
 contract devVesting {
@@ -125,6 +129,7 @@ contract Fundraiser {
         uint amountLiq = t.balance * maxLaunchTokensPerETH;
         amountLiq = amountLiq>token.balanceOf(t)? token.balanceOf(t):amountLiq;
         ROUTER.addLiquidityETH{value: t.balance}(address(token), amountLiq, amountLiq, t.balance, t, block.timestamp);
+        token.burn(token.balanceOf(t));
     }
     
     receive() external payable {
