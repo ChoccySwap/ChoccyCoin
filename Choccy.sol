@@ -81,11 +81,13 @@ contract Fundraiser {
     address public immutable owner;
     mapping (address => bool) public wl;
     uint public minWL;
+    uint public maxWL;
     uint public wlFactor;
     uint public numWL;
     bool public inWL = false;
     bool public inPS = false;
     uint public minPS;
+    uint public maxPS;
     uint public psFactor;
     IRouter01 private constant ROUTER = IRouter01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);//use joe if you use AVAX, spooky for FTM...
     devVesting public immutable vester;
@@ -100,22 +102,24 @@ contract Fundraiser {
         token.transfer(owner, amountDirect);
     }
     
-    function startWhitelist(address[] calldata _wl, uint _min, uint _wlFactor) external{
+    function startWhitelist(address[] calldata _wl, uint _min, uint_max, uint _wlFactor) external{
         require(msg.sender == owner);
         for (uint i = 0; i< _wl.length; i++){
             wl[_wl[i]] = true;
         }
         numWL = _wl.length;
         minWL = _min;
+        maxWL = _max;
         inWL = true;
         wlFactor = _wlFactor;
     }
     
-    function startPublicPresale(uint _min, uint _psFactor) external{ 
+    function startPublicPresale(uint _min, uint _max, uint _psFactor) external{ 
         require(msg.sender == owner);
         inPS = true;
         psFactor = _psFactor;
         minPS = _min;
+        maxPS = _max;
         psFactor = _psFactor;
     }
     
@@ -135,6 +139,7 @@ contract Fundraiser {
     receive() external payable {
         if (inWL && wl[msg.sender]) {
             require(msg.value >= minWL, "You need to send more than that! Check the minWL value!");
+            require(msg.value <= maxWL, "You need to send less than that! Check the maxWL value!");
             wl[msg.sender] = false;
             numWL--;
             inWL = numWL>0;
@@ -142,6 +147,7 @@ contract Fundraiser {
             return;
         } else if (inPS) {
             require(msg.value >= minPS, "You need to send more than that! Check the minPS value!");
+            require(msg.value <= maxPS, "You need to send less than that! Check the maxPS value!");
             token.transfer(msg.sender, msg.value * psFactor);
             return;
         }
