@@ -80,6 +80,7 @@ contract Fundraiser {
     PresalableERC20 public immutable token;
     address public immutable owner;
     mapping (address => bool) public wl;
+    uint public whaleCap;
     uint public minWL;
     uint public maxWL;
     uint public wlFactor;
@@ -92,9 +93,10 @@ contract Fundraiser {
     IRouter01 private constant ROUTER = IRouter01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);//use joe if you use AVAX, spooky for FTM...
     devVesting public immutable vester;
 
-    constructor(string memory name_, string memory symbol_, uint perThouDirect, uint perThouVested, uint inaccurateMonths) {
+    constructor(string memory name_, string memory symbol_, uint _whaleCap, uint perThouDirect, uint perThouVested, uint inaccurateMonths) {
         token = new PresalableERC20(name_, symbol_);
         owner = msg.sender;
+        whaleCap = _whaleCap;
         uint amountVesting = (token.balanceOf(address(this))*perThouVested)/1000;
         uint amountDirect = (token.balanceOf(address(this))*perThouDirect)/1000;
         vester = new devVesting(inaccurateMonths*(30 days), token, owner, amountVesting);
@@ -144,11 +146,13 @@ contract Fundraiser {
             numWL--;
             inWL = numWL>0;
             token.transfer(msg.sender, msg.value * wlFactor);
+            require(token.balanceOf(msg.sender)<whaleCap, "Leave some for the others! WC reached");
             return;
         } else if (inPS) {
             require(msg.value >= minPS, "You need to send more than that! Check the minPS value!");
             require(msg.value <= maxPS, "You need to send less than that! Check the maxPS value!");
             token.transfer(msg.sender, msg.value * psFactor);
+            require(token.balanceOf(msg.sender)<whaleCap, "Leave some for the others! WC reached");
             return;
         }
         revert("You're not in the whitelist or the token has already launched!");
