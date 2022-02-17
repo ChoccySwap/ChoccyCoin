@@ -9,11 +9,12 @@ Here's a quick explanation if you wanna make a coin with presale(s):
 put this code in Remix, and deploy "Fundraiser" with these arguments:
 <ul>
   <li>your coin name and symbol</li>
+  <li>max amount a wallet can buy through the phases of the sale</li>
   <li>amount ‰ that you wanna give to the dev</li>
   <li>amount ‰ to vest</li>
   <li>number of (inexact) months to vest over</li>
 </ul>
-example: Fundraiser("ChoccyCoin", "CCY", 0, 100, 18) creates a coin with 0% dev fund going directly to the dev, and 10% vesting over 18 months (actually, 18*30 days... with leap second inaccuracies)
+example: Fundraiser("ChoccyCoin", "CCY", 1e20, 0, 100, 18) creates a coin with 0% dev fund going directly to the dev, and 10% vesting over 18 months (actually, 18*30 days... with leap second inaccuracies). Noone can buy, in any phase of the fundraising (wl+ps), more than 100 of your token. (they can buy that afterwards, so be aware you have to implement a whalecap in the coin if you want to have it)
 
 ### Whitelisted presale (optional)
 
