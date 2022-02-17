@@ -21,10 +21,11 @@ use Fundraiser.startWhitelist with these arguments:
 <ul>
   <li>the whitelisted addresses</li>
   <li>minimum buy for the whitelist</li>
+  <li>maximum buy for the whitelist</li>
   <li>number of tokens to give for each ETH (or AVAX, or FTM) during whitelist</li>
 </ul>
-example: Fundraiser.startWhitelist(["address1", "address2"], 125*1e16, 4000) will give 4000 tokens per ETH, only to whitelisted addresses (address1 and address2).
-They can't buy less than 1.25 ETH in this case.
+example: Fundraiser.startWhitelist(["address1", "address2"], 125*1e16, 1e30, 4000) will give 4000 tokens per ETH, only to whitelisted addresses (address1 and address2).
+They can't buy less than 1.25 ETH or more than 1T ETH (too high, obviously) in this case.
 
 if a user wants to buy some tokens, they just need to send ETH (or AVAX... you get it) to the fundraiser address. They'll get the right amount of tokens back, but they can't do transactions until you launch the tokens (so noone can start a pool before launch).
 
@@ -34,9 +35,10 @@ if a user wants to buy some tokens, they just need to send ETH (or AVAX... you g
 use Fundraiser.startPublicPresale with these arguments:
 <ul>
   <li>minimum buy for the presale (can be different than whitelist)</li>
+  <li>maximum buy for the presale (can be different than whitelist)</li>
   <li>number of tokens to give for each ETH (or AVAX, or FTM) during public presale (can be different than whitelist, and should be lower if you made a whitelist)</li>
 </ul>
-example: Fundraiser.startPublicPresale(0, 3809) starts a public presale with no lower buy limit and 3809 tokens per ETH
+example: Fundraiser.startPublicPresale(0, 1e15, 3809) starts a public presale with no lower buy limit and 3809 tokens per ETH. Noone can buy more than 0.001 ETH.
 
 if a user wants to buy some tokens, they just need to send ETH (or AVAX... you get it) to the fundraiser address. They'll get the right amount of tokens back, but they can't do transactions until you launch the tokens (so noone can start a pool before launch). If you had a whitelist it won't get stopped, so that if someone had a spot on the whitelist but didn't buy in time he can still get his tokens
 
