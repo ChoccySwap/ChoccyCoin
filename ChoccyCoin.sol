@@ -74,8 +74,16 @@ contract Presaler {
         }
     }
 
-    function status(address who) public view returns (uint b, uint s) {
-        return (bought[who], sent[who]);
+    function _calcRetrievable(address who) internal view returns (uint am){
+        uint timePercent = 50 + 50*(block.timestamp - start) / vestDuration;
+        timePercent = timePercent > 100? 100 : timePercent;
+        uint amount = (bought[msg.sender] * timePercent) / 100;
+        uint toSend = amount - sent[msg.sender];
+        return toSend;
+    }
+
+    function status(address who) public view returns (uint b, uint r) {
+        return (bought[who], _calcRetrievable(who));
     }
 
     function getFactor() public view returns (uint) {
@@ -93,11 +101,8 @@ contract Presaler {
 
     function retrieveToken() external{
         require(launched, "Presale hasn't ended yet!");
-        uint timePercent = 50 + 50*(block.timestamp - start) / vestDuration;
-        timePercent = timePercent > 100? 100 : timePercent;
-        uint amount = (bought[msg.sender] * timePercent) / 100;
-        uint toSend = amount - sent[msg.sender];
-        sent[msg.sender] = amount;
+        uint toSend = _calcRetrievable(msg.sender);
+        sent[msg.sender] += toSend;
         token.transfer(msg.sender, toSend * factor);
     }
 }
