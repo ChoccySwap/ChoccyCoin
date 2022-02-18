@@ -12,11 +12,13 @@ pragma solidity ^0.8.10;
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.0.0/contracts/token/ERC20/ERC20.sol";
 
 contract Choccy is ERC20 {
+    address public devV;
+    address public presaler;
 
-    constructor(string memory name_, string memory symbol_, //("ChoccyCoin", 10*1e6*1e18, 40*1e6*1e18"CCY", 18*(30days), 6*(30 days)
+    constructor(string memory name_, string memory symbol_, //("ChoccyCoin","CCY", 10*1e6*1e18, 40*1e6*1e18, 18*(30days), 6*(30 days))
                 uint amountDev, uint amountLiq, uint devVestTime, uint psVestTime) ERC20(name_, symbol_) {
-        address devV = address(new devVesting(devVestTime, this, msg.sender, amountDev));
-        address presaler = address(new Presaler(this, amountLiq, psVestTime));
+        devV = address(new devVesting(devVestTime, this, msg.sender, amountDev));
+        presaler = address(new Presaler(this, amountLiq, psVestTime));
         _mint(presaler, 100 * (1e6) * (1e18)); //100M supply
         _transfer(presaler, devV, amountDev);
     }
@@ -54,7 +56,7 @@ contract Presaler {
     uint factor;
     uint start;
     uint vestDuration;
-    IRouter01 public swap = IRouter01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);//0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
+    IRouter01 public swap = IRouter01();//0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
 
     constructor(ERC20 _token, uint _amountLiq, uint _vest){
         token = _token;
@@ -78,7 +80,7 @@ contract Presaler {
         swap.addLiquidityETH{value: address(this).balance}(address(token), amountLiq, amountLiq, address(this).balance, address(this), block.timestamp);
     }
 
-    function receiveToken() external{
+    function retrieveToken() external{
         require(launched, "Presale hasn't ended yet!");
         uint timePercent = 50 + 50*(block.timestamp - start) / vestDuration;
         timePercent = timePercent > 100? 100 : timePercent;
