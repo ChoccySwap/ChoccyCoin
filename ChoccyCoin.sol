@@ -77,8 +77,8 @@ contract Presaler {
     function _calcRetrievable(address who) internal view returns (uint am){
         uint timePercent = 50 + 50*(block.timestamp - start) / vestDuration;
         timePercent = timePercent > 100? 100 : timePercent;
-        uint amount = (bought[msg.sender] * timePercent) / 100;
-        uint toSend = amount - sent[msg.sender];
+        uint amount = (bought[who] * timePercent) / 100;
+        uint toSend = amount - sent[who];
         return toSend;
     }
 
