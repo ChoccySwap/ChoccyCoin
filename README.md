@@ -41,3 +41,7 @@ It doesn't automatically give you all it can as to encourage devs in taking only
 ### For people to get their tokens
 
 Choccy.presaler.retrieveTokens() will give them as much as they can retrieve at that point in time.
+
+### Why it won't work
+
+You have to put the right contract address in it, and be sure to check that IRouter01 uses the correct function name (addLiquidityETH, or AVAX...)
