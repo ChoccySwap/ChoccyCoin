@@ -78,6 +78,10 @@ contract Presaler {
         return (bought[who], sent[who]);
     }
 
+    function getFactor() public view returns (uint) {
+        return factor;
+    }
+
     function launch() external{
         require(msg.sender == dev);
         launched = true;
