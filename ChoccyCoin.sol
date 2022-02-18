@@ -74,6 +74,10 @@ contract Presaler {
         }
     }
 
+    function status(address who) public view returns (uint b, uint s) {
+        return (bought[who], sent[who]);
+    }
+
     function launch() external{
         require(msg.sender == dev);
         launched = true;
