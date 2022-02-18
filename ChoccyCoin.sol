@@ -50,18 +50,20 @@ contract devVesting {
 contract Presaler {
     ERC20 public immutable token;
     uint public immutable amountLiq;
+    address public immutable dev;
+    uint public immutable vestDuration;
     mapping (address => uint) bought;
     mapping (address => uint) sent;
     bool public launched;
     uint factor;
     uint start;
-    uint vestDuration;
     IRouter01 public swap = IRouter01();//0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
 
     constructor(ERC20 _token, uint _amountLiq, uint _vest){
         token = _token;
         amountLiq = _amountLiq;
         vestDuration = _vest;
+        dev = tx.origin;
     }
 
     receive() external payable {
@@ -73,6 +75,7 @@ contract Presaler {
     }
 
     function launch() external{
+        require(msg.sender == dev);
         launched = true;
         factor = (token.balanceOf(address(this))-amountLiq) / address(this).balance ;
         start = block.timestamp;
