@@ -2,6 +2,7 @@
 The governance token for ChoccySwap. We have 100M total supply.
 This is the smart contract we're using, and it should be publicly available for others to use too.
 (for CoinWithPresale.sol, look at README.old)
+(if you want a treasury, look at the actual code we're using, ChoccyFinal.sol, but keep in mind the data is hardcoded there)
 
 This code WILL NOT work if you just plug it and try to start. This is on purpose, please read thise file before trying to clone it.
 
