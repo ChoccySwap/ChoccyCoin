@@ -57,7 +57,7 @@ contract Presaler {
     bool public launched;
     uint factor;
     uint start;
-    IRouter01 public swap = IRouter01();//0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
+    IRouter01 public swap = IRouter01(0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
 
     constructor(ERC20 _token, uint _amountLiq, uint _vest){
         token = _token;
@@ -110,11 +110,11 @@ contract Presaler {
 
 interface IRouter01 { //Change with your preferred router (UNI, pancake, Joe...)
 
-    function addLiquidityETH(//AVAX(
+    function addLiquidityAVAX(
         address token,
         uint amountTokenDesired,
         uint amountTokenMin,
-        uint amountETHMin,
+        uint amountAVAXMin,
         address to,
         uint deadline
     )
@@ -122,7 +122,7 @@ interface IRouter01 { //Change with your preferred router (UNI, pancake, Joe...)
         payable
         returns (
             uint amountToken,
-            uint amountETH,
+            uint amountAVAX,
             uint liquidity
         );
 }
