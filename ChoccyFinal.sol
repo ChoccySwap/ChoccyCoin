@@ -23,7 +23,6 @@ contract Choccy is ERC20 {
         _mint(presaler, 100 * (1e6) * (1e18)); //100M supply
         _transfer(presaler, devV, 10*1e6*1e18); //10% dev fund
         _transfer(presaler, treasury, 30*1e6*1e18); //30% treasury. this leaves the rest for presale, 33% (27%+10%+30% = 67%)
-        _mint(msg.sender, 200 * (1e3) * (1e18)); //100.2M supply (for airdrop)
     }
 }
 
@@ -94,7 +93,7 @@ contract Presaler {
     bool public launched;
     uint factor;
     uint start;
-    IRouter01 public swap = IRouter01(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);//0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
+    IRouter01 public swap = IRouter01(0x60aE616a2155Ee3d9A68541Ba4544862310933d4);//<=JOE
 
     constructor(ERC20 _token, uint _amountLiq, uint _vest){
         token = _token;
@@ -136,7 +135,7 @@ contract Presaler {
         factor = (token.balanceOf(address(this))-amountLiq) / address(this).balance ;
         start = block.timestamp;
         token.approve(address(swap), amountLiq);
-        swap.addLiquidityETH{value: address(this).balance}(address(token), amountLiq, amountLiq, address(this).balance, address(this), block.timestamp);
+        swap.addLiquidityAVAX{value: address(this).balance}(address(token), amountLiq, amountLiq, address(this).balance, address(this), block.timestamp);
     }
 
     function retrieveToken() external{
@@ -150,11 +149,11 @@ contract Presaler {
 
 interface IRouter01 { //Change with your preferred router (UNI, pancake, Joe...)
 
-    function addLiquidityETH(//AVAX(
+    function addLiquidityAVAX(
         address token,
         uint amountTokenDesired,
         uint amountTokenMin,
-        uint amountETHMin,
+        uint amountAVAXMin,
         address to,
         uint deadline
     )
@@ -162,7 +161,7 @@ interface IRouter01 { //Change with your preferred router (UNI, pancake, Joe...)
         payable
         returns (
             uint amountToken,
-            uint amountETH,
+            uint amountAVAX,
             uint liquidity
         );
 }
